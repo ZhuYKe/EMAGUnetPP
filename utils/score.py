@@ -4,7 +4,6 @@ import torch
 import numpy as np
 
 
-# 检测区域iou评价
 def iou_score(output, label):
     smooth = 0.000000000000001
 
@@ -14,8 +13,8 @@ def iou_score(output, label):
         label = label.data.cpu().numpy
     output_ = output() > 0.5
     label_ = label() > 0.5
-    intersection = (output_ & label_).sum()  # 取并集、求和
-    union = (output_ | label_).sum()  # 取交集、求和
+    intersection = (output_ & label_).sum()
+    union = (output_ | label_).sum()
 
     return intersection / (union + smooth)
 
@@ -33,9 +32,9 @@ def background_iou(output, label):
     output_ = ~output_
     label_ = ~label_
 
-    intersection = np.sum(output_ & label_, axis=(1, 2))  # 计算分割结果背景的交集像素数量，返回一个一维数组
-    union = np.sum(output_ | label_, axis=(1, 2))  # 计算分割结果背景的并集像素数量，返回一个一维数组
-    iou = intersection / (union + smooth)  # 计算分割结果背景的IOU
+    intersection = np.sum(output_ & label_, axis=(1, 2))
+    union = np.sum(output_ | label_, axis=(1, 2))
+    iou = intersection / (union + smooth)
 
     return iou
 
@@ -49,8 +48,8 @@ def pixel_accuracy(output, label):
     output_ = output > 0.5
     label_ = label > 0.5
 
-    correct_pixels = (output_ == label_).sum()  # 统计预测正确的像素数量
-    total_pixels = output_.size  # 总像素数量
+    correct_pixels = (output_ == label_).sum()
+    total_pixels = output_.size
     accuracy = correct_pixels / total_pixels
     return accuracy
 
