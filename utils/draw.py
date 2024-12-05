@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf-8
 from matplotlib import pyplot as plt
+import sys
 
 def draw(path, loss_picture_save_path):
     with open(path) as file_object:
@@ -57,6 +58,6 @@ def draw(path, loss_picture_save_path):
 
 
 if __name__ == "__main__":
-    Log_save_txt = "D:/ZYK/Unet/logs/chenxianmoni/Unet/logs.txt"  # 日志文件保存路径
+    Log_save_txt = sys.argv[1]
     Loss_picture_save_path = "D:/ZYK/Unet/figure.png"
     draw(path=Log_save_txt, loss_picture_save_path=Loss_picture_save_path)
