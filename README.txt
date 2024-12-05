@@ -2,7 +2,12 @@
 Improved Unet network model for mining subsidence segmentation using differential interferometric phase maps of Sentinel-1 remote sensing images
 
 # requirements
-numpy、pytorch、tqdm、thop、open-cv、matplotlib
+numpy 1.12.6
+pytorch 1.2.0
+tqdm 4.66.1
+thop 0.1.1
+open-cv 4.8.1.78
+matplotlib 3.5.3
 
 # Directory structure description
     ├── README.txt                  // Help document
