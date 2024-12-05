@@ -11,51 +11,44 @@ from MODEL.UNet import UNet
 from MODEL.EMAGUNetPP import EMAG
 
 
-# torch.cuda.set_device(0)
-setup_seed(42)  # 设置随机种子方便复现
+setup_seed(42)  # Fixed random seed
 
 work_path = "/mnt/d/ZYK_WorkSpace/Unet"
-
-# 【输入数据集地址（该路径下需要包含train、eval、test三个数据集文件夹）】
 data_path = work_path + "/data_test"
-
-# 【日志文件、权重文件、loss曲线图将保存于此路径】
 log_save_path = work_path + "/logs_test"
-# 【测试结果图像和结果数据将保存于此路径】
 Test_result_save_path = work_path + "/predict_result"
 
-#  *********** 【选择训练模式or测试模式】*********
+#  *********** 【Select training mode or test mode】*********
 model_choose = 'Train'
 # model_choose = 'Test'
 
-# ***********【选择网络模式】************
+# ***********【Choose MODEL】************
 net_choose = 'Unet'
 # net_choose = 'EMAG_Unet++'
 
-# 【epoch、batch_size、初始lr、早停轮数设置】
+# 【epoch、batch_size、ori_lr、earlystop】
 epochs = 150  # 200
 batch_size = 4  # 8
 lr = 0.1
 early_stop_set = 30  # 20
 
-# 【输入图片通道数量1 网络分类类别1种】
+# 【Input picture Number of channels 1 Network category Category 1】
 in_channels = 1
 num_classes = 1
 
-# 选择设备，有cuda用cuda，没有就用cpu
 Device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 if model_choose == 'Train':
 
-    Train_data_path = data_path + "/train/"  # 训练数据集地址
-    Eval_data_path = data_path + "/eval/"  # 验证数据集地址
+    Train_data_path = data_path + "/train/"
+    Eval_data_path = data_path + "/eval/"
 
     net_dir = log_save_path + "/" + f"{net_choose}"
     if not os.path.exists(net_dir):
         os.mkdir(net_dir)
-    Log_txt_save_path = net_dir + "/logs.txt"  # 日志文件保存路径
-    Log_pth_save_path = net_dir + "/best.pth"  # 权重文件保存路径
-    Loss_picture_save_path = net_dir + "/figure.png"  # loss曲线图保存路径
+    Log_txt_save_path = net_dir + "/logs.txt"
+    Log_pth_save_path = net_dir + "/best.pth"
+    Loss_picture_save_path = net_dir + "/figure.png"
 
     if net_choose == 'Unet':
         Net = UNet(in_channels=in_channels, num_classes=num_classes)
@@ -84,6 +77,6 @@ if model_choose == 'Test':
     if not os.path.exists(txt_log_save_path):
         os.mkdir(txt_log_save_path)
 
-    test_data_path = data_path + "/test/"  # 验证数据集地址
+    test_data_path = data_path + "/test/"
     test_unet(net=Net, device=Device, pth_path=Log_pth_save_path, test_data_dir=test_data_path,
               txt_log_save_dir=txt_log_save_path)
