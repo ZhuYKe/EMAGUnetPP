@@ -6,13 +6,13 @@ import torch.nn.functional as f
 # from torchsummary import summary
 
 
-class DoubleConv(nn.Module):       # 连续两次卷积模块
+class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
         self.double_conv = nn.Sequential(
-            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),  # 卷积：输入通道数，输出通道数，卷积核大小3  步长默认1 填充1
-            nn.BatchNorm2d(out_channels),        # BN：数据归一化
-            nn.ReLU(inplace=True),        # ReLU :激活函数
+            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
             nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True)
@@ -22,29 +22,29 @@ class DoubleConv(nn.Module):       # 连续两次卷积模块
         return self.double_conv(x)
 
 
-class Down(nn.Module):   # 下采样模块（下采样+卷积）
+class Down(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
         self.maxpool_conv = nn.Sequential(
-            nn.MaxPool2d(2),  # 最大池化 池化核大小2
-            DoubleConv(in_channels, out_channels)   # 两次卷积
+            nn.MaxPool2d(2),
+            DoubleConv(in_channels, out_channels)
         )
 
     def forward(self, x):
         return self.maxpool_conv(x)
 
 
-class Up(nn.Module):   # 上采样模块（上采样+特征融合+卷积）
-    def __init__(self, in_channels, out_channels, bilinear):  # 定义上采样方法，并进行两次卷积
+class Up(nn.Module):
+    def __init__(self, in_channels, out_channels, bilinear):
         super().__init__()
-        if bilinear:  # 双线性插值
-            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)  # 上池化
+        if bilinear:
+            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
         else:
-            self.up = nn.ConvTranspose2d(in_channels-out_channels, in_channels-out_channels, kernel_size=2, stride=2)  # 反卷积
-        self.conv = DoubleConv(in_channels, out_channels)  # 两次卷积
+            self.up = nn.ConvTranspose2d(in_channels-out_channels, in_channels-out_channels, kernel_size=2, stride=2) 
+        self.conv = DoubleConv(in_channels, out_channels)
 
-    def forward(self, x1, x2):  # 上采样、特征融合、卷积
-        x1 = self.up(x1)  # x1接收上采样数据，x2接收特征融合数据
+    def forward(self, x1, x2):
+        x1 = self.up(x1)
         diffy = torch.tensor([x2.size()[2] - x1.size()[2]])
         diffx = torch.tensor([x2.size()[3] - x1.size()[3]])
         x1 = f.pad(x1, [diffx // 2, diffx - diffx // 2,
@@ -53,10 +53,10 @@ class Up(nn.Module):   # 上采样模块（上采样+特征融合+卷积）
         return self.conv(x)
 
 
-class OutConv(nn.Module):  # 整合输出通道
+class OutConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super(OutConv, self).__init__()
-        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=1)  # 卷积： 卷积核大小1
+        self.conv = nn.Conv2d(in_channels, out_channels, kernel_size=1)
 
     def forward(self, x):
         return self.conv(x)
@@ -95,15 +95,8 @@ class UNet(nn.Module):
         return output
 
 
-# if __name__ == '__main__':
-#     test = torch.randn(size=(2, 1, 256, 256))
-#     unet = UNet(in_channels=1, num_classes=1)
-#     print(unet(test).shape)
-#     summary(unet, (1, 256, 256))
-
 if __name__ == '__main__':
     unet = UNet(in_channels=1, num_classes=1)
     print(unet)
-    # 计算模型的参数数量
     total_params = sum(p.numel() for p in unet.parameters())
     print(f"Total Parameters: {total_params}")  # 7851969
