@@ -11,6 +11,8 @@ matplotlib 3.5.3
 
 # Directory structure description
     ├── README.txt                  // Help document
+    ├── torch2onnx.py               // Translate torch model and pth to ONNX
+    ├── onnxrun.py                  // Use onnx predict png
     ├── main.py                     // Principal function 
     ├── train.py                    // Train and Eval functions
     ├── predict.py                  // Test function
