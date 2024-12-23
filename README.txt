@@ -37,6 +37,6 @@ matplotlib 3.5.3
                     ├───── image                      // image
                     ├───── label                      // label
 
-
+# DATASET:https://pan.baidu.com/s/1ayTcDGNQ_zIKSbqw2HDTnw?pwd=4K9G
 # Cite：
 Yinke Zhu, Tianhua Chen, Jinghui Fan, Hongli Zhao, Jiahui Lin, Guang Liu, and Shibiao Bai "Segmentation of mining subsidence areas in D-InSAR interferometric phase images using improved UNet++ network," Journal of Applied Remote Sensing 18(3), 034522. https://doi.org/10.1117/1.JRS.18.034522
